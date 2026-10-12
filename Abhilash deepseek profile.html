@@ -1,0 +1,2168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Abhilash · Cybersecurity Analyst</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..700&family=JetBrains+Mono:wght@400;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --neon: #00ff88;
+      --neon-bright: #39ff14;
+      --neon-soft: #7dffb8;
+      --neon-dark: #00b85c;
+      --lime: #a3ff12;
+      --dark: #030711;
+      --dark-2: #060d1c;
+      --dark-3: #0a1428;
+      --glass: rgba(10, 25, 40, 0.5);
+      --glass-border: rgba(0, 255, 136, 0.25);
+      --text-light: #e6fffa;
+      --text-muted: #7a9b8f;
+      --text-dim: #4d6b5f;
+      --linkedin: #0a66c2;
+    }
+
+    * { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+    .mono { font-family: 'JetBrains Mono', 'Courier New', monospace; }
+    .display-font { font-family: 'Space Grotesk', 'Inter', sans-serif; letter-spacing: -0.03em; }
+
+    body {
+      background-color: var(--dark);
+      color: var(--text-light);
+      overflow-x: hidden;
+      scroll-behavior: smooth;
+      position: relative;
+    }
+
+    /* ============================================================
+       ANIMATION 1: MORPHING BLOB BACKGROUND
+       ============================================================ */
+    .blob-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .blob {
+      position: absolute;
+      border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+      filter: blur(70px);
+      opacity: 0.3;
+      animation: blob-morph 20s ease-in-out infinite, blob-drift 30s linear infinite;
+    }
+
+    .blob-1 {
+      width: 500px; height: 500px;
+      background: linear-gradient(135deg, var(--neon), var(--neon-dark));
+      top: -10%; right: -5%;
+    }
+
+    .blob-2 {
+      width: 400px; height: 400px;
+      background: linear-gradient(135deg, var(--lime), var(--neon));
+      bottom: 10%; left: -5%;
+      animation-delay: -7s, -5s;
+    }
+
+    .blob-3 {
+      width: 350px; height: 350px;
+      background: linear-gradient(135deg, var(--neon-bright), var(--neon-dark));
+      top: 40%; left: 40%;
+      animation-delay: -14s, -12s;
+    }
+
+    @keyframes blob-morph {
+      0%, 100% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
+      33% { border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%; }
+      66% { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+    }
+
+    @keyframes blob-drift {
+      0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+      33% { transform: translate(80px, -60px) rotate(120deg) scale(1.1); }
+      66% { transform: translate(-60px, 80px) rotate(240deg) scale(0.95); }
+      100% { transform: translate(0, 0) rotate(360deg) scale(1); }
+    }
+
+    /* ============================================================
+       ANIMATION 2: MOVING GRID LINES
+       ============================================================ */
+    .grid-bg {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image: 
+        linear-gradient(rgba(0, 255, 136, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 255, 136, 0.05) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+      -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 80%);
+      animation: grid-scroll 60s linear infinite;
+    }
+
+    @keyframes grid-scroll {
+      0% { background-position: 0 0, 0 0; }
+      100% { background-position: 60px 60px, 60px 60px; }
+    }
+
+    .content-layer { position: relative; z-index: 2; }
+
+    /* ============================================================
+       ANIMATION 3: SCANLINE SWEEP OVERLAY
+       ============================================================ */
+    .scanline-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        transparent 50%,
+        rgba(0, 255, 136, 0.03) 50%,
+        rgba(0, 255, 136, 0.03) 51%,
+        transparent 51%,
+        transparent 100%
+      );
+      background-size: 100% 4px;
+      animation: scanline-move 10s linear infinite;
+      opacity: 0.6;
+    }
+
+    @keyframes scanline-move {
+      0% { background-position: 0 0; }
+      100% { background-position: 0 100%; }
+    }
+
+    /* ============================================================
+       ANIMATION 4: CURSOR GLOW TRAIL
+       ============================================================ */
+    .cursor-glow {
+      position: fixed;
+      width: 400px;
+      height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0, 255, 136, 0.12) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 1;
+      transform: translate(-50%, -50%);
+      mix-blend-mode: screen;
+    }
+
+    /* ============================================================
+       ANIMATION 5: GLASS PANELS WITH 3D FLIP
+       ============================================================ */
+    .flip-card {
+      perspective: 1200px;
+      height: 100%;
+    }
+
+    .flip-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-style: preserve-3d;
+    }
+
+    .flip-card:hover .flip-card-inner {
+      transform: rotateY(8deg) rotateX(-4deg);
+    }
+
+    .glass-panel {
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Scanline sweep on hover */
+    .glass-panel::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 50%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.15), transparent);
+      transition: left 1.2s ease;
+      pointer-events: none;
+    }
+
+    .glass-panel:hover::before {
+      left: 200%;
+    }
+
+    .glass-panel:hover {
+      border-color: var(--neon);
+      box-shadow: 
+        0 20px 60px -20px rgba(0, 255, 136, 0.4),
+        0 0 0 1px rgba(0, 255, 136, 0.1) inset;
+    }
+
+    /* ============================================================
+       ANIMATION 6: NAVBAR WITH ANIMATED UNDERLINE
+       ============================================================ */
+    .navbar {
+      background-color: rgba(3, 7, 17, 0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(0, 255, 136, 0.15);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      padding: 1rem 0;
+    }
+
+    .navbar.scrolled {
+      background-color: rgba(3, 7, 17, 0.95);
+      box-shadow: 0 8px 32px rgba(0, 255, 136, 0.15);
+      padding: 0.6rem 0;
+    }
+
+    .navbar-brand {
+      font-weight: 700;
+      color: var(--text-light) !important;
+      font-family: 'Space Grotesk', sans-serif;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-logo {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 42px; height: 42px;
+      border: 2px solid var(--neon);
+      border-radius: 12px;
+      background: rgba(0, 255, 136, 0.05);
+      position: relative;
+      transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    .brand-logo::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 16px;
+      border: 2px solid var(--neon);
+      opacity: 0;
+      transition: all 0.4s ease;
+    }
+
+    .brand-logo i {
+      color: var(--neon);
+      font-size: 1.2rem;
+      filter: drop-shadow(0 0 8px var(--neon));
+    }
+
+    .navbar-brand:hover .brand-logo {
+      transform: rotate(360deg) scale(1.1);
+      box-shadow: 0 0 30px var(--neon);
+    }
+
+    .navbar-brand:hover .brand-logo::after {
+      opacity: 1;
+      animation: ping-ring 1.2s ease-out infinite;
+    }
+
+    @keyframes ping-ring {
+      0% { transform: scale(1); opacity: 1; }
+      100% { transform: scale(1.6); opacity: 0; }
+    }
+
+    .nav-link {
+      font-weight: 500;
+      color: var(--text-muted) !important;
+      padding: 0.5rem 1.1rem !important;
+      margin: 0 3px;
+      border-radius: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      position: relative;
+      transition: all 0.3s ease;
+      border: 1px solid transparent;
+      overflow: hidden;
+    }
+
+    .nav-link span {
+      position: relative;
+      z-index: 2;
+      transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      display: inline-block;
+    }
+
+    .nav-link:hover span {
+      transform: translateY(-3px);
+    }
+
+    .nav-link::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      width: 100%; height: 0;
+      background: rgba(0, 255, 136, 0.15);
+      transition: height 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 1;
+    }
+
+    .nav-link:hover::before {
+      height: 100%;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 6px; left: 50%;
+      transform: translateX(-50%);
+      width: 0; height: 2px;
+      background: var(--neon);
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 0 10px var(--neon);
+      z-index: 2;
+    }
+
+    .nav-link:hover::after { width: 60%; }
+
+    .nav-link:hover {
+      color: var(--neon) !important;
+    }
+
+    /* ============================================================
+       ANIMATION 7: MAGNETIC BUTTONS WITH RIPPLE
+       ============================================================ */
+    .btn-neon, .btn-neon-filled {
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+      will-change: transform;
+    }
+
+    .btn-neon {
+      background: transparent;
+      color: var(--neon);
+      border: 2px solid var(--neon);
+      padding: 0.7rem 1.8rem;
+      border-radius: 12px;
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      z-index: 1;
+    }
+
+    .btn-neon::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.4), transparent);
+      transition: left 0.7s ease;
+      z-index: -1;
+    }
+
+    .btn-neon:hover::before { left: 100%; }
+
+    .btn-neon:hover {
+      color: var(--dark);
+      background: var(--neon);
+      box-shadow: 0 0 30px var(--neon), 0 0 60px rgba(0, 255, 136, 0.4);
+    }
+
+    .btn-neon-filled {
+      background: var(--neon);
+      color: var(--dark);
+      border: 2px solid var(--neon);
+      padding: 0.7rem 1.8rem;
+      border-radius: 12px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      box-shadow: 0 0 25px rgba(0, 255, 136, 0.5);
+      z-index: 1;
+    }
+
+    .btn-neon-filled:hover {
+      box-shadow: 0 0 40px var(--neon), 0 0 80px rgba(0, 255, 136, 0.4);
+      color: var(--dark);
+    }
+
+    /* Ripple */
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.6);
+      transform: scale(0);
+      animation: ripple-anim 0.6s ease-out;
+      pointer-events: none;
+    }
+
+    @keyframes ripple-anim {
+      to {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+
+    /* ============================================================
+       ANIMATION 8: SECTION CHIPS WITH NUMBER COUNT
+       ============================================================ */
+    .section-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0.5rem 1rem;
+      background: rgba(0, 255, 136, 0.08);
+      border: 1px solid rgba(0, 255, 136, 0.3);
+      border-radius: 100px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--neon);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      animation: chip-glow 3s ease-in-out infinite;
+    }
+
+    @keyframes chip-glow {
+      0%, 100% { box-shadow: 0 0 0 rgba(0, 255, 136, 0); }
+      50% { box-shadow: 0 0 20px rgba(0, 255, 136, 0.3); }
+    }
+
+    .section-chip .num {
+      background: var(--neon);
+      color: var(--dark);
+      padding: 2px 8px;
+      border-radius: 100px;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+
+    .section-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--text-light);
+      line-height: 1.1;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Typewriter reveal for section title */
+    .typewriter {
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 3px solid var(--neon);
+      width: 0;
+      animation: none;
+    }
+
+    .typewriter.animate {
+      animation: typewriter-anim 1.8s steps(40, end) forwards, blink-cursor 0.8s step-end infinite;
+    }
+
+    @keyframes typewriter-anim {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+
+    @keyframes blink-cursor {
+      from, to { border-color: transparent; }
+      50% { border-color: var(--neon); }
+    }
+
+    @media (max-width: 768px) {
+      .typewriter {
+        white-space: normal;
+        border-right: none;
+        width: 100% !important;
+        animation: none !important;
+      }
+    }
+
+    .section-subtitle {
+      color: var(--text-muted);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      margin-bottom: 2rem;
+    }
+
+    /* ============================================================
+       ANIMATION 9: HERO TITLE LETTER SCRAMBLE
+       ============================================================ */
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0.6rem 1.3rem;
+      background: rgba(0, 255, 136, 0.08);
+      border: 1px solid rgba(0, 255, 136, 0.3);
+      border-radius: 100px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--neon);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      animation: badge-slide 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) both;
+    }
+
+    @keyframes badge-slide {
+      0% { opacity: 0; transform: translateY(-20px) scale(0.8); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .hero-badge .dot {
+      width: 8px; height: 8px;
+      background: var(--neon);
+      border-radius: 50%;
+      box-shadow: 0 0 12px var(--neon);
+      animation: pulse-dot 1.5s ease-in-out infinite;
+      position: relative;
+    }
+
+    .hero-badge .dot::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 1px solid var(--neon);
+      animation: ping-ring 1.5s ease-out infinite;
+    }
+
+    @keyframes pulse-dot {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.3); }
+    }
+
+    .hero-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: clamp(2.5rem, 6vw, 4.5rem);
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+      margin-bottom: 1.5rem;
+      color: var(--text-light);
+    }
+
+    /* Each letter animates in */
+    .hero-title .letter {
+      display: inline-block;
+      opacity: 0;
+      transform: translateY(30px) rotateX(-90deg);
+      animation: letter-in 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    @keyframes letter-in {
+      to {
+        opacity: 1;
+        transform: translateY(0) rotateX(0);
+      }
+    }
+
+    .hero-title .accent {
+      color: var(--neon);
+      text-shadow: 0 0 30px rgba(0, 255, 136, 0.6);
+      position: relative;
+      display: inline-block;
+    }
+
+    .hero-title .accent::after {
+      content: '';
+      position: absolute;
+      bottom: -5px; left: 0;
+      width: 0; height: 4px;
+      background: linear-gradient(90deg, var(--neon), transparent);
+      border-radius: 2px;
+      animation: underline-grow 1.2s 1.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    @keyframes underline-grow {
+      to { width: 100%; }
+    }
+
+    .hero-desc {
+      font-size: 1.05rem;
+      line-height: 1.7;
+      color: var(--text-muted);
+      max-width: 560px;
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fade-up 1s 1s ease forwards;
+    }
+
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .terminal-line {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0.6rem 1rem;
+      background: rgba(0, 20, 10, 0.6);
+      border: 1px solid rgba(0, 255, 136, 0.2);
+      border-radius: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.88rem;
+      color: var(--neon);
+      margin-bottom: 1.5rem;
+      min-height: 40px;
+      opacity: 0;
+      animation: fade-up 1s 1.2s ease forwards;
+    }
+
+    .terminal-line .prompt { color: var(--lime); font-weight: 700; }
+    .terminal-line .cursor {
+      display: inline-block;
+      width: 9px; height: 16px;
+      background: var(--neon);
+      margin-left: 4px;
+      animation: cursor-blink 1s step-end infinite;
+      vertical-align: middle;
+      box-shadow: 0 0 8px var(--neon);
+    }
+
+    @keyframes cursor-blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    /* ============================================================
+       ANIMATION 10: ROLLING STATS ODOMETER
+       ============================================================ */
+    .stat-block {
+      display: flex;
+      flex-direction: column;
+      padding: 1.2rem;
+      background: rgba(0, 255, 136, 0.03);
+      border: 1px solid rgba(0, 255, 136, 0.15);
+      border-radius: 12px;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      height: 100%;
+      opacity: 0;
+      animation: stat-pop 0.7s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+      animation-delay: calc(var(--i, 0) * 0.15s + 1.3s);
+    }
+
+    @keyframes stat-pop {
+      0% { opacity: 0; transform: scale(0.5) translateY(30px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .stat-block:hover {
+      background: rgba(0, 255, 136, 0.08);
+      border-color: var(--neon);
+      transform: translateY(-6px) scale(1.03);
+      box-shadow: 0 10px 30px -10px rgba(0, 255, 136, 0.4);
+    }
+
+    .stat-block .num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 1.8rem;
+      color: var(--neon);
+      text-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+      line-height: 1;
+      margin-bottom: 6px;
+      overflow: hidden;
+      height: 1.8rem;
+    }
+
+    .stat-block .lbl {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    /* ============================================================
+       ANIMATION 11: PROFILE PULSE RINGS + CONIC BORDER
+       ============================================================ */
+    .profile-wrap {
+      position: relative;
+      width: 340px;
+      height: 340px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hex-container {
+      position: relative;
+      width: 260px;
+      height: 300px;
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      background: linear-gradient(135deg, var(--neon) 0%, var(--neon-dark) 100%);
+      padding: 3px;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      filter: drop-shadow(0 0 30px rgba(0, 255, 136, 0.6));
+      animation: hex-breathe 4s ease-in-out infinite;
+    }
+
+    @keyframes hex-breathe {
+      0%, 100% { filter: drop-shadow(0 0 30px rgba(0, 255, 136, 0.5)); }
+      50% { filter: drop-shadow(0 0 50px rgba(0, 255, 136, 0.9)); }
+    }
+
+    .hex-inner {
+      width: 100%;
+      height: 100%;
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      overflow: hidden;
+      background: var(--dark-2);
+      position: relative;
+    }
+
+    .hex-inner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 20%;
+      display: block;
+      transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .hex-container:hover {
+      filter: drop-shadow(0 0 60px rgba(0, 255, 136, 1));
+      transform: scale(1.04);
+    }
+
+    .hex-container:hover .hex-inner img { transform: scale(1.1); }
+
+    /* Pulse rings */
+    .pulse-ring {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 300px; height: 300px;
+      border: 2px solid var(--neon);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      animation: pulse-expand 3s ease-out infinite;
+      pointer-events: none;
+    }
+
+    .pulse-ring:nth-child(2) { animation-delay: 1s; }
+    .pulse-ring:nth-child(3) { animation-delay: 2s; }
+
+    @keyframes pulse-expand {
+      0% {
+        width: 280px; height: 280px;
+        opacity: 0.8;
+        border-width: 2px;
+      }
+      100% {
+        width: 480px; height: 480px;
+        opacity: 0;
+        border-width: 1px;
+      }
+    }
+
+    /* Rotating conic gradient ring */
+    .conic-ring {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 340px; height: 340px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background: conic-gradient(from 0deg, transparent, var(--neon), transparent 30%);
+      animation: conic-spin 4s linear infinite;
+      pointer-events: none;
+      mask: radial-gradient(circle, transparent 60%, black 62%, black 100%);
+      -webkit-mask: radial-gradient(circle, transparent 60%, black 62%, black 100%);
+      opacity: 0.6;
+    }
+
+    @keyframes conic-spin {
+      to { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    /* ============================================================
+       ANIMATION 12: SKILL CHIPS WITH WAVE ENTRANCE
+       ============================================================ */
+    .skill-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0.55rem 1rem;
+      background: rgba(0, 255, 136, 0.05);
+      border: 1px solid rgba(0, 255, 136, 0.2);
+      border-radius: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--text-light);
+      transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+      cursor: default;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .skill-chip i { color: var(--neon); font-size: 0.85rem; transition: transform 0.4s ease; }
+
+    .skill-chip::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.3), transparent);
+      transform: translateX(-100%);
+      transition: transform 0.6s ease;
+    }
+
+    .skill-chip:hover::before {
+      transform: translateX(100%);
+    }
+
+    .skill-chip:hover {
+      background: var(--neon);
+      color: var(--dark);
+      border-color: var(--neon);
+      transform: translateY(-4px) scale(1.05);
+      box-shadow: 0 10px 25px -8px rgba(0, 255, 136, 0.6);
+    }
+
+    .skill-chip:hover i {
+      color: var(--dark);
+      transform: rotate(360deg) scale(1.2);
+    }
+
+    /* ============================================================
+       ANIMATION 13: PROGRESS BAR WITH STRIPE
+       ============================================================ */
+    .skill-progress {
+      height: 8px;
+      background: rgba(0, 255, 136, 0.08);
+      border-radius: 100px;
+      overflow: hidden;
+      position: relative;
+      margin-top: 8px;
+      border: 1px solid rgba(0, 255, 136, 0.15);
+    }
+
+    .skill-progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--neon-dark), var(--neon), var(--neon-bright));
+      background-size: 200% 100%;
+      border-radius: 100px;
+      width: 0;
+      transition: width 1.8s cubic-bezier(0.4, 0, 0.2, 1);
+      animation: gradient-slide 2s linear infinite;
+      box-shadow: 0 0 12px var(--neon);
+      position: relative;
+    }
+
+    .skill-progress-bar::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.15) 25%,
+        transparent 25%,
+        transparent 50%,
+        rgba(255, 255, 255, 0.15) 50%,
+        rgba(255, 255, 255, 0.15) 75%,
+        transparent 75%
+      );
+      background-size: 12px 12px;
+      animation: stripe-move 1s linear infinite;
+      border-radius: 100px;
+    }
+
+    @keyframes stripe-move {
+      0% { background-position: 0 0; }
+      100% { background-position: 12px 0; }
+    }
+
+    @keyframes gradient-slide {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+
+    /* ============================================================
+       ANIMATION 14: STATUS BADGES WITH SHIMMER
+       ============================================================ */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0.35rem 0.85rem;
+      background: rgba(0, 255, 136, 0.1);
+      border: 1px solid var(--neon);
+      border-radius: 100px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--neon);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 700;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .status-badge::after {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      animation: badge-shimmer 2.5s ease-in-out infinite;
+    }
+
+    @keyframes badge-shimmer {
+      0% { left: -100%; }
+      50%, 100% { left: 100%; }
+    }
+
+    .status-badge.graduated { background: rgba(0, 255, 136, 0.15); }
+
+    .status-badge .pulse {
+      width: 6px; height: 6px;
+      background: var(--neon);
+      border-radius: 50%;
+      animation: pulse-dot 1.5s ease-in-out infinite;
+      box-shadow: 0 0 8px var(--neon);
+    }
+
+    /* ============================================================
+       ANIMATION 15: CONTACT ITEMS WITH SLIDE + GLOW
+       ============================================================ */
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 1rem;
+      background: rgba(0, 255, 136, 0.03);
+      border: 1px solid rgba(0, 255, 136, 0.15);
+      border-radius: 12px;
+      transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      text-decoration: none;
+      margin-bottom: 0.75rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .contact-item::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0;
+      width: 0; height: 100%;
+      background: linear-gradient(90deg, rgba(0, 255, 136, 0.15), transparent);
+      transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .contact-item:hover::before {
+      width: 100%;
+    }
+
+    .contact-item:hover {
+      background: rgba(0, 255, 136, 0.08);
+      border-color: var(--neon);
+      transform: translateX(10px);
+      box-shadow: 0 10px 30px -10px rgba(0, 255, 136, 0.4);
+    }
+
+    .contact-icon {
+      flex-shrink: 0;
+      width: 46px; height: 46px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      background: rgba(0, 255, 136, 0.1);
+      border: 1px solid rgba(0, 255, 136, 0.3);
+      color: var(--neon);
+      font-size: 1.1rem;
+      transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      position: relative;
+      z-index: 2;
+    }
+
+    .contact-item:hover .contact-icon {
+      background: var(--neon);
+      color: var(--dark);
+      box-shadow: 0 0 25px var(--neon);
+      transform: rotate(-15deg) scale(1.15);
+    }
+
+    .contact-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 3px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .contact-value {
+      color: var(--text-light);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      transition: color 0.3s ease;
+      word-break: break-word;
+      position: relative;
+      z-index: 2;
+    }
+
+    .contact-item:hover .contact-value { color: var(--neon); }
+
+    .contact-item.linkedin-item {
+      background: rgba(10, 102, 194, 0.08);
+      border-color: rgba(10, 102, 194, 0.35);
+    }
+
+    .contact-item.linkedin-item .contact-icon {
+      background: rgba(10, 102, 194, 0.15);
+      border-color: rgba(10, 102, 194, 0.5);
+      color: #38bdf8;
+    }
+
+    .contact-item.linkedin-item:hover {
+      background: rgba(10, 102, 194, 0.15);
+      border-color: #0a66c2;
+      box-shadow: 0 10px 30px -10px rgba(10, 102, 194, 0.6);
+    }
+
+    .contact-item.linkedin-item:hover .contact-icon {
+      background: #0a66c2;
+      color: #ffffff;
+      border-color: #0a66c2;
+      box-shadow: 0 0 25px rgba(10, 102, 194, 0.8);
+    }
+
+    .contact-item.linkedin-item:hover .contact-value { color: #38bdf8; }
+
+    /* ============================================================
+       ANIMATION 16: FORM INPUTS WITH FOCUS RING
+       ============================================================ */
+    .form-input {
+      width: 100%;
+      padding: 0.9rem 1.1rem;
+      background: rgba(0, 20, 10, 0.5);
+      border: 1px solid rgba(0, 255, 136, 0.2);
+      border-radius: 10px;
+      color: var(--text-light);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.88rem;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      outline: none;
+      position: relative;
+    }
+
+    .form-input::placeholder { color: var(--text-dim); }
+
+    .form-input:focus {
+      border-color: var(--neon);
+      box-shadow: 
+        0 0 0 3px rgba(0, 255, 136, 0.15), 
+        0 0 20px rgba(0, 255, 136, 0.2);
+      background: rgba(0, 20, 10, 0.8);
+      transform: translateY(-2px);
+    }
+
+    /* ============================================================
+       ANIMATION 17: SOCIAL BUTTONS WITH BOUNCE
+       ============================================================ */
+    .social-btn {
+      width: 48px; height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      border: 1px solid rgba(0, 255, 136, 0.3);
+      background: rgba(0, 255, 136, 0.05);
+      color: var(--neon);
+      font-size: 1.05rem;
+      transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      position: relative;
+      overflow: hidden;
+      text-decoration: none;
+    }
+
+    .social-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--neon);
+      transform: scale(0);
+      border-radius: 50%;
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 0;
+    }
+
+    .social-btn:hover::before {
+      transform: scale(1);
+      border-radius: 12px;
+    }
+
+    .social-btn i {
+      position: relative;
+      z-index: 1;
+      transition: color 0.3s ease, transform 0.5s ease;
+    }
+
+    .social-btn:hover {
+      color: var(--dark);
+      transform: translateY(-6px) rotate(-10deg) scale(1.1);
+      box-shadow: 0 15px 30px -10px rgba(0, 255, 136, 0.7);
+      border-color: var(--neon);
+    }
+
+    .social-btn:hover i {
+      transform: rotate(370deg);
+    }
+
+    .social-btn.linkedin-btn {
+      border-color: rgba(10, 102, 194, 0.4);
+      background: rgba(10, 102, 194, 0.08);
+      color: #38bdf8;
+    }
+
+    .social-btn.linkedin-btn::before { background: #0a66c2; }
+
+    .social-btn.linkedin-btn:hover {
+      color: #ffffff;
+      border-color: #0a66c2;
+      box-shadow: 0 15px 30px -10px rgba(10, 102, 194, 0.8);
+    }
+
+    /* ============================================================
+       ANIMATION 18: MARQUEE TICKER RIBBON
+       ============================================================ */
+    .marquee-ribbon {
+      position: relative;
+      padding: 1rem 0;
+      background: rgba(0, 255, 136, 0.05);
+      border-top: 1px solid rgba(0, 255, 136, 0.2);
+      border-bottom: 1px solid rgba(0, 255, 136, 0.2);
+      overflow: hidden;
+      margin: 4rem 0;
+    }
+
+    .marquee-track {
+      display: flex;
+      gap: 3rem;
+      animation: marquee-scroll 30s linear infinite;
+      white-space: nowrap;
+      width: fit-content;
+    }
+
+    .marquee-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      transition: color 0.3s ease;
+    }
+
+    .marquee-item i {
+      color: var(--neon);
+      font-size: 0.8rem;
+      filter: drop-shadow(0 0 6px var(--neon));
+    }
+
+    .marquee-item:hover {
+      color: var(--neon);
+    }
+
+    @keyframes marquee-scroll {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
+
+    /* ============================================================
+       ANIMATION 19: FOOTER WITH SHIMMER TOP
+       ============================================================ */
+    .footer {
+      background: rgba(3, 7, 17, 0.95);
+      border-top: 1px solid rgba(0, 255, 136, 0.15);
+      padding: 2rem 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .footer::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--neon), transparent);
+      background-size: 200% 100%;
+      animation: shimmer 4s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    .footer a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      transition: all 0.3s ease;
+      margin: 0 10px;
+      position: relative;
+    }
+
+    .footer a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0;
+      width: 0; height: 1px;
+      background: var(--neon);
+      transition: width 0.3s ease;
+    }
+
+    .footer a:hover::after { width: 100%; }
+
+    .footer a:hover { color: var(--neon); text-shadow: 0 0 12px var(--neon); }
+
+    /* ============================================================
+       ANIMATION 20: REVEAL (BLUR TO FOCUS)
+       ============================================================ */
+    .reveal {
+      opacity: 0;
+      filter: blur(10px);
+      transform: translateY(40px) scale(0.95);
+      transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      filter: blur(0);
+      transform: translateY(0) scale(1);
+    }
+
+    .reveal-left {
+      opacity: 0;
+      filter: blur(10px);
+      transform: translateX(-60px) scale(0.95);
+      transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal-left.visible {
+      opacity: 1;
+      filter: blur(0);
+      transform: translateX(0) scale(1);
+    }
+
+    .reveal-right {
+      opacity: 0;
+      filter: blur(10px);
+      transform: translateX(60px) scale(0.95);
+      transition: all 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal-right.visible {
+      opacity: 1;
+      filter: blur(0);
+      transform: translateX(0) scale(1);
+    }
+
+    /* ============================================================
+       SCROLL CUE
+       ============================================================ */
+    .scroll-cue {
+      position: absolute;
+      bottom: 30px; left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--neon);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      opacity: 0.7;
+      transition: opacity 0.3s ease;
+    }
+
+    .scroll-cue:hover { opacity: 1; }
+
+    .scroll-cue .mouse {
+      width: 24px;
+      height: 38px;
+      border: 2px solid var(--neon);
+      border-radius: 12px;
+      position: relative;
+      box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+    }
+
+    .scroll-cue .mouse::before {
+      content: '';
+      position: absolute;
+      top: 6px; left: 50%;
+      transform: translateX(-50%);
+      width: 4px; height: 8px;
+      background: var(--neon);
+      border-radius: 2px;
+      animation: wheel 2s ease-in-out infinite;
+      box-shadow: 0 0 8px var(--neon);
+    }
+
+    @keyframes wheel {
+      0% { top: 6px; opacity: 1; }
+      100% { top: 20px; opacity: 0; }
+    }
+
+    /* ============================================================
+       RESPONSIVE
+       ============================================================ */
+    @media (max-width: 991px) {
+      .profile-wrap { width: 280px; height: 280px; }
+      .hex-container { width: 220px; height: 255px; }
+      .conic-ring { width: 280px; height: 280px; }
+      .pulse-ring { width: 260px; height: 260px; }
+    }
+
+    @media (max-width: 768px) {
+      .profile-wrap { width: 240px; height: 240px; }
+      .hex-container { width: 190px; height: 220px; }
+      .conic-ring { width: 240px; height: 240px; }
+      .pulse-ring { width: 220px; height: 220px; }
+      .hero-title { font-size: 2.2rem; }
+      .cursor-glow { display: none; }
+      .stat-block .num { font-size: 1.5rem; }
+      .navbar { padding: 0.7rem 0; }
+      .contact-value { font-size: 0.8rem; }
+      .typewriter { white-space: normal; border-right: none; }
+    }
+
+    @media (max-width: 480px) {
+      .profile-wrap { width: 200px; height: 200px; }
+      .hex-container { width: 160px; height: 185px; }
+      .conic-ring { width: 200px; height: 200px; }
+      .pulse-ring { width: 180px; height: 180px; }
+    }
+
+    .container { max-width: 1200px; }
+    section { padding: 5rem 0; position: relative; }
+    @media (max-width: 768px) { section { padding: 3rem 0; } }
+  </style>
+</head>
+<body>
+
+  <!-- Backgrounds -->
+  <div class="blob-bg">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+  <div class="grid-bg"></div>
+  <div class="scanline-overlay"></div>
+  <div class="cursor-glow" id="cursorGlow"></div>
+
+  <div class="content-layer">
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg sticky-top" id="mainNav">
+      <div class="container">
+        <a class="navbar-brand" href="#home">
+          <span class="brand-logo"><i class="fas fa-shield-halved"></i></span>
+          <span>ABHILASH<span style="color: var(--neon);">.exe</span></span>
+        </a>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navContent" aria-controls="navContent" aria-expanded="false" aria-label="Toggle navigation">
+          <i class="fas fa-bars" style="color: var(--neon); font-size: 1.4rem;"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navContent">
+          <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+            <li class="nav-item"><a class="nav-link" href="#home"><span>Home</span></a></li>
+            <li class="nav-item"><a class="nav-link" href="#about"><span>About</span></a></li>
+            <li class="nav-item"><a class="nav-link" href="#skills"><span>Skills</span></a></li>
+            <li class="nav-item"><a class="nav-link" href="#experience"><span>Journey</span></a></li>
+            <li class="nav-item"><a class="nav-link" href="#contact"><span>Contact</span></a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- HERO -->
+    <section id="home" class="d-flex align-items-center" style="min-height: 92vh; padding-top: 3rem;">
+      <div class="container">
+        <div class="row align-items-center g-5">
+          <div class="col-lg-7">
+            <div class="hero-badge">
+              <span class="dot"></span>
+              Cybersecurity Analyst · Fresher
+            </div>
+
+            <h1 class="hero-title" id="heroTitle" data-text="Hi, I'm Abhilash"></h1>
+
+            <p class="hero-desc">
+              A passionate cybersecurity enthusiast starting my professional journey. 
+              Trained in SOC operations, threat detection, and vulnerability assessment — 
+              ready to protect organizations from evolving cyber threats.
+            </p>
+
+            <div class="terminal-line">
+              <span class="prompt">abhilash@soc:~$</span>
+              <span id="typingText" class="mono"></span>
+              <span class="cursor"></span>
+            </div>
+
+            <div class="d-flex flex-wrap gap-3 mb-5">
+              <a href="#contact" class="btn-neon-filled text-decoration-none magnet">
+                <i class="fas fa-paper-plane me-2"></i>Get in touch
+              </a>
+              <a href="#experience" class="btn-neon text-decoration-none magnet">
+                <i class="fas fa-code-branch me-2"></i>My journey
+              </a>
+            </div>
+
+            <div class="row g-3">
+              <div class="col-4" style="--i: 0;">
+                <div class="stat-block">
+                  <div class="num" data-count="10">0</div>
+                  <div class="lbl">Projects</div>
+                </div>
+              </div>
+              <div class="col-4" style="--i: 1;">
+                <div class="stat-block">
+                  <div class="num" data-count="5">0</div>
+                  <div class="lbl">Certifications</div>
+                </div>
+              </div>
+              <div class="col-4" style="--i: 2;">
+                <div class="stat-block">
+                  <div class="num" data-count="100">0</div>
+                  <div class="lbl">Labs</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-5 d-flex justify-content-center reveal-right">
+            <div class="profile-wrap">
+              <div class="pulse-ring"></div>
+              <div class="pulse-ring"></div>
+              <div class="pulse-ring"></div>
+              <div class="conic-ring"></div>
+              <div class="hex-container">
+                <div class="hex-inner">
+                  <img 
+                    src="profile.jpg" 
+                    alt="Abhilash - Cybersecurity Analyst"
+                    onerror="this.style.display='none'; this.parentElement.innerHTML='<div style=\'width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#00ff88;font-size:4rem;background:linear-gradient(135deg,#030711,#0a1428);\'><i class=\'fas fa-user-secret\'></i></div>';"
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="scroll-cue">
+        <div class="mouse"></div>
+        <span>scroll</span>
+      </div>
+    </section>
+
+    <!-- MARQUEE RIBBON -->
+    <div class="marquee-ribbon">
+      <div class="marquee-track" id="marqueeTrack">
+        <!-- Items will be duplicated by JS -->
+      </div>
+    </div>
+
+    <!-- ABOUT -->
+    <section id="about">
+      <div class="container">
+        <div class="row mb-5 reveal">
+          <div class="col-lg-8">
+            <div class="section-chip"><span class="num">01</span> About me</div>
+            <h2 class="section-title typewriter" data-typewriter>Get to know the person behind the terminal</h2>
+            <p class="section-subtitle">// brief introduction</p>
+          </div>
+        </div>
+
+        <div class="row g-4">
+          <div class="col-lg-7 reveal-left">
+            <div class="flip-card">
+              <div class="flip-card-inner">
+                <div class="glass-panel p-4 p-md-5 h-100">
+                  <p style="font-size: 1.05rem; line-height: 1.8; color: var(--text-light); margin-bottom: 1rem;">
+                    I'm an aspiring cybersecurity analyst with strong foundational knowledge in SOC operations, 
+                    vulnerability management, and threat intelligence.
+                  </p>
+                  <p style="line-height: 1.8; color: var(--text-muted);">
+                    Currently building hands-on skills through labs, CTF challenges, and personal security projects. 
+                    My goal is to help organizations stay resilient against ransomware, phishing, and advanced persistent threats.
+                  </p>
+
+                  <div class="row g-3 mt-4">
+                    <div class="col-sm-6">
+                      <div class="d-flex align-items-center gap-3">
+                        <div class="contact-icon" style="width: 38px; height: 38px; font-size: 0.9rem;"><i class="fas fa-check"></i></div>
+                        <span class="mono" style="font-size: 0.85rem;">Threat hunting & SIEM</span>
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="d-flex align-items-center gap-3">
+                        <div class="contact-icon" style="width: 38px; height: 38px; font-size: 0.9rem;"><i class="fas fa-check"></i></div>
+                        <span class="mono" style="font-size: 0.85rem;">Incident response</span>
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="d-flex align-items-center gap-3">
+                        <div class="contact-icon" style="width: 38px; height: 38px; font-size: 0.9rem;"><i class="fas fa-check"></i></div>
+                        <span class="mono" style="font-size: 0.85rem;">Vulnerability assessment</span>
+                      </div>
+                    </div>
+                    <div class="col-sm-6">
+                      <div class="d-flex align-items-center gap-3">
+                        <div class="contact-icon" style="width: 38px; height: 38px; font-size: 0.9rem;"><i class="fas fa-check"></i></div>
+                        <span class="mono" style="font-size: 0.85rem;">Cloud security</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-5 reveal-right">
+            <div class="flip-card">
+              <div class="flip-card-inner">
+                <div class="glass-panel p-4 h-100">
+                  <div class="d-flex align-items-center gap-3 mb-4">
+                    <div class="contact-icon"><i class="fas fa-id-card"></i></div>
+                    <h5 class="fw-bold mb-0 display-font">Quick facts</h5>
+                  </div>
+                  <ul class="list-unstyled mb-0">
+                    <li class="d-flex align-items-center gap-3 py-3" style="border-bottom: 1px solid rgba(0,255,136,0.1);">
+                      <i class="fas fa-map-pin" style="color: var(--neon); width: 20px;"></i>
+                      <span class="mono" style="font-size: 0.9rem;">Kasaragod, Kerala, India</span>
+                    </li>
+                    <li class="d-flex align-items-center gap-3 py-3" style="border-bottom: 1px solid rgba(0,255,136,0.1);">
+                      <i class="fas fa-graduation-cap" style="color: var(--neon); width: 20px;"></i>
+                      <span class="mono" style="font-size: 0.9rem;">B.Tech in Computer Science</span>
+                    </li>
+                    <li class="d-flex align-items-center gap-3 py-3" style="border-bottom: 1px solid rgba(0,255,136,0.1);">
+                      <i class="fas fa-certificate" style="color: var(--neon); width: 20px;"></i>
+                      <span class="mono" style="font-size: 0.9rem;">CEH, Security+, CySA+</span>
+                    </li>
+                    <li class="d-flex align-items-center gap-3 py-3">
+                      <i class="fas fa-language" style="color: var(--neon); width: 20px;"></i>
+                      <span class="mono" style="font-size: 0.9rem;">English, Hindi, Malayalam</span>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SKILLS -->
+    <section id="skills">
+      <div class="container">
+        <div class="row mb-5 reveal">
+          <div class="col-lg-8">
+            <div class="section-chip"><span class="num">02</span> Skills & Tools</div>
+            <h2 class="section-title typewriter" data-typewriter>The arsenal I work with</h2>
+            <p class="section-subtitle">// tech stack & expertise</p>
+          </div>
+        </div>
+
+        <div class="row g-4">
+          <div class="col-md-6 reveal-left">
+            <div class="flip-card">
+              <div class="flip-card-inner">
+                <div class="glass-panel p-4 h-100">
+                  <div class="d-flex align-items-center gap-3 mb-4">
+                    <div class="contact-icon"><i class="fas fa-shield-alt"></i></div>
+                    <h5 class="fw-bold mb-0 display-font">Core Competencies</h5>
+                  </div>
+                  <div class="d-flex flex-wrap gap-2 mb-4" data-wave>
+                    <span class="skill-chip"><i class="fas fa-chart-line"></i> SIEM</span>
+                    <span class="skill-chip"><i class="fas fa-bug"></i> IDS/IPS</span>
+                    <span class="skill-chip"><i class="fas fa-network-wired"></i> Network Security</span>
+                    <span class="skill-chip"><i class="fas fa-cloud"></i> Cloud Security</span>
+                    <span class="skill-chip"><i class="fas fa-code"></i> Python</span>
+                    <span class="skill-chip"><i class="fas fa-user-secret"></i> Threat Intel</span>
+                    <span class="skill-chip"><i class="fas fa-file-alt"></i> Risk Assessment</span>
+                    <span class="skill-chip"><i class="fas fa-lock"></i> PKI</span>
+                  </div>
+                  <div class="mb-3">
+                    <div class="d-flex justify-content-between mono" style="font-size: 0.8rem;">
+                      <span style="color: var(--text-light);">SIEM & Threat Detection</span>
+                      <span style="color: var(--neon);">78%</span>
+                    </div>
+                    <div class="skill-progress"><div class="skill-progress-bar" data-width="78%"></div></div>
+                  </div>
+                  <div class="mb-3">
+                    <div class="d-flex justify-content-between mono" style="font-size: 0.8rem;">
+                      <span style="color: var(--text-light);">Incident Response</span>
+                      <span style="color: var(--neon);">72%</span>
+                    </div>
+                    <div class="skill-progress"><div class="skill-progress-bar" data-width="72%"></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6 reveal-right">
+            <div class="flip-card">
+              <div class="flip-card-inner">
+                <div class="glass-panel p-4 h-100">
+                  <div class="d-flex align-items-center gap-3 mb-4">
+                    <div class="contact-icon"><i class="fas fa-tools"></i></div>
+                    <h5 class="fw-bold mb-0 display-font">Tools & Technologies</h5>
+                  </div>
+                  <div class="d-flex flex-wrap gap-2 mb-4" data-wave>
+                    <span class="skill-chip"><i class="fas fa-terminal"></i> Wireshark</span>
+                    <span class="skill-chip"><i class="fas fa-radar"></i> Nessus</span>
+                    <span class="skill-chip"><i class="fas fa-shield-virus"></i> CrowdStrike</span>
+                    <span class="skill-chip"><i class="fas fa-fire"></i> Palo Alto</span>
+                    <span class="skill-chip"><i class="fas fa-key"></i> Vault</span>
+                    <span class="skill-chip"><i class="fas fa-database"></i> ELK Stack</span>
+                    <span class="skill-chip"><i class="fab fa-aws"></i> AWS</span>
+                    <span class="skill-chip"><i class="fas fa-code-branch"></i> MITRE</span>
+                  </div>
+                  <div class="mb-3">
+                    <div class="d-flex justify-content-between mono" style="font-size: 0.8rem;">
+                      <span style="color: var(--text-light);">Cloud Security</span>
+                      <span style="color: var(--neon);">70%</span>
+                    </div>
+                    <div class="skill-progress"><div class="skill-progress-bar" data-width="70%"></div></div>
+                  </div>
+                  <div class="mb-3">
+                    <div class="d-flex justify-content-between mono" style="font-size: 0.8rem;">
+                      <span style="color: var(--text-light);">Automation & Scripting</span>
+                      <span style="color: var(--neon);">75%</span>
+                    </div>
+                    <div class="skill-progress"><div class="skill-progress-bar" data-width="75%"></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- EXPERIENCE -->
+    <section id="experience">
+      <div class="container">
+        <div class="row mb-5 reveal">
+          <div class="col-lg-8">
+            <div class="section-chip"><span class="num">03</span> Journey</div>
+            <h2 class="section-title typewriter" data-typewriter>Experience & education</h2>
+            <p class="section-subtitle">// my story so far</p>
+          </div>
+        </div>
+
+        <div class="row g-4">
+          <div class="col-lg-7 reveal-left">
+            <div class="flip-card">
+              <div class="flip-card-inner">
+                <div class="glass-panel p-4 p-md-5 h-100">
+                  <div class="d-flex justify-content-between align-items-start mb-3 flex-wrap gap-3">
+                    <div>
+                      <h4 class="display-font fw-bold mb-1">Cybersecurity Fresher</h4>
+                      <p class="mono mb-0" style="color: var(--text-muted); font-size: 0.85rem;">
+                        <i class="fas fa-rocket me-1" style="color: var(--neon);"></i>
+                        Actively seeking entry-level roles
+                      </p>
+                    </div>
+                    <span class="status-badge"><span class="pulse"></span> Available</span>
+                  </div>
+
+                  <p class="mono mb-4" style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.7;">
+                    Just completed intensive cybersecurity training and hands-on lab practice. 
+                    Looking for an opportunity to apply my skills in a real SOC environment 
+                    and grow as a security professional.
+                  </p>
+
+                  <h6 class="display-font fw-bold mb-3" style="color: var(--neon);">
+                    <i class="fas fa-bullseye me-2"></i>What I bring
+                  </h6>
+                  <ul class="list-unstyled">
+                    <li class="mono d-flex gap-3 py-2" style="font-size: 0.88rem; color: var(--text-muted);"><i class="fas fa-check" style="color: var(--neon); margin-top: 4px;"></i>Hands-on experience with SIEM tools (Splunk, Sentinel)</li>
+                    <li class="mono d-flex gap-3 py-2" style="font-size: 0.88rem; color: var(--text-muted);"><i class="fas fa-check" style="color: var(--neon); margin-top: 4px;"></i>Practiced threat detection & incident response in labs</li>
+                    <li class="mono d-flex gap-3 py-2" style="font-size: 0.88rem; color: var(--text-muted);"><i class="fas fa-check" style="color: var(--neon); margin-top: 4px;"></i>Vulnerability scanning with Nessus & OpenVAS</li>
+                    <li class="mono d-flex gap-3 py-2" style="font-size: 0.88rem; color: var(--text-muted);"><i class="fas fa-check" style="color: var(--neon); margin-top: 4px;"></i>Network analysis using Wireshark & tcpdump</li>
+                    <li class="mono d-flex gap-3 py-2" style="font-size: 0.88rem; color: var(--text-muted);"><i class="fas fa-check" style="color: var(--neon); margin-top: 4px;"></i>Python scripting for security automation</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-5">
+            <div class="reveal-right mb-4">
+              <div class="glass-panel p-4">
+                <div class="d-flex align-items-center gap-3 mb-3 flex-wrap">
+                  <div class="contact-icon"><i class="fas fa-graduation-cap"></i></div>
+                  <div class="flex-grow-1">
+                    <h5 class="fw-bold mb-0 display-font">B.Tech in CS</h5>
+                    <p class="mono mb-0" style="color: var(--text-muted); font-size: 0.75rem;">NIT Calicut · 2015 – 2019</p>
+                  </div>
+                  <span class="status-badge graduated"><i class="fas fa-check-circle"></i> Graduated</span>
+                </div>
+                <ul class="list-unstyled mb-0">
+                  <li class="mono py-1" style="font-size: 0.85rem; color: var(--text-muted);"><i class="fas fa-award me-2" style="color: var(--neon);"></i>First Class with Distinction</li>
+                  <li class="mono py-1" style="font-size: 0.85rem; color: var(--text-muted);"><i class="fas fa-project-diagram me-2" style="color: var(--neon);"></i>ML-based IDS project</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="reveal-right" data-delay="150">
+              <div class="glass-panel p-4">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                  <div class="contact-icon"><i class="fas fa-certificate"></i></div>
+                  <h5 class="fw-bold mb-0 display-font">Certifications</h5>
+                </div>
+                <div class="d-flex flex-wrap gap-2">
+                  <span class="skill-chip"><i class="fas fa-award"></i> CEH</span>
+                  <span class="skill-chip"><i class="fas fa-award"></i> Security+</span>
+                  <span class="skill-chip"><i class="fas fa-award"></i> CySA+</span>
+                  <span class="skill-chip"><i class="fas fa-award"></i> AWS Security</span>
+                  <span class="skill-chip"><i class="fas fa-award"></i> SC-200</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="reveal-right mt-4" data-delay="250">
+              <div class="glass-panel p-4">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                  <div class="contact-icon"><i class="fas fa-flask"></i></div>
+                  <h5 class="fw-bold mb-0 display-font">Training</h5>
+                </div>
+                <ul class="list-unstyled mb-0">
+                  <li class="mono py-1" style="font-size: 0.83rem; color: var(--text-muted);"><i class="fas fa-terminal me-2" style="color: var(--neon);"></i>TryHackMe — SOC L1</li>
+                  <li class="mono py-1" style="font-size: 0.83rem; color: var(--text-muted);"><i class="fas fa-terminal me-2" style="color: var(--neon);"></i>Hack The Box — Labs</li>
+                  <li class="mono py-1" style="font-size: 0.83rem; color: var(--text-muted);"><i class="fas fa-terminal me-2" style="color: var(--neon);"></i>LetsDefend — SOC Analyst</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+      <div class="container">
+        <div class="row mb-5 reveal">
+          <div class="col-lg-8">
+            <div class="section-chip"><span class="num">04</span> Contact</div>
+            <h2 class="section-title typewriter" data-typewriter>Let's connect</h2>
+            <p class="section-subtitle">// open to opportunities</p>
+          </div>
+        </div>
+
+        <div class="row g-4">
+          <div class="col-lg-5 reveal-left">
+
+            <a href="mailto:abhilashpvabhi05@gmail.com" class="contact-item">
+              <div class="contact-icon"><i class="fas fa-envelope"></i></div>
+              <div>
+                <div class="contact-label">Email</div>
+                <div class="contact-value">abhilashpvabhi05@gmail.com</div>
+              </div>
+            </a>
+
+            <a href="tel:+919400254001" class="contact-item">
+              <div class="contact-icon"><i class="fas fa-phone-alt"></i></div>
+              <div>
+                <div class="contact-label">Phone</div>
+                <div class="contact-value">+91 94002 54001</div>
+              </div>
+            </a>
+
+            <a href="https://www.linkedin.com/in/abhilash-p-v-8b50a241a" 
+               target="_blank" 
+               rel="noopener noreferrer" 
+               class="contact-item linkedin-item">
+              <div class="contact-icon"><i class="fab fa-linkedin-in"></i></div>
+              <div>
+                <div class="contact-label">LinkedIn</div>
+                <div class="contact-value">linkedin.com/in/abhilash-p-v</div>
+              </div>
+            </a>
+
+            <div class="contact-item">
+              <div class="contact-icon"><i class="fas fa-map-marker-alt"></i></div>
+              <div>
+                <div class="contact-label">Location</div>
+                <div class="contact-value">Kasaragod, Kerala, India</div>
+              </div>
+            </div>
+
+            <div class="d-flex gap-3 mt-4">
+              <a href="https://www.linkedin.com/in/abhilash-p-v-8b50a241a" 
+                 target="_blank" 
+                 rel="noopener noreferrer" 
+                 class="social-btn linkedin-btn" 
+                 aria-label="LinkedIn Profile"
+                 title="Connect on LinkedIn">
+                <i class="fab fa-linkedin-in"></i>
+              </a>
+              <a href="#" class="social-btn" aria-label="GitHub" title="GitHub Profile">
+                <i class="fab fa-github"></i>
+              </a>
+              <a href="#" class="social-btn" aria-label="Twitter" title="X / Twitter Profile">
+                <i class="fab fa-x-twitter"></i>
+              </a>
+            </div>
+          </div>
+
+          <div class="col-lg-7 reveal-right">
+            <div class="glass-panel p-4 p-md-5">
+              <h5 class="display-font fw-bold mb-4">
+                <i class="fas fa-pen me-2" style="color: var(--neon);"></i>Send a message
+              </h5>
+              <form onsubmit="event.preventDefault(); alert('Message sent! (demo)');">
+                <div class="row g-3">
+                  <div class="col-md-6">
+                    <input type="text" class="form-input" placeholder="Your name" required>
+                  </div>
+                  <div class="col-md-6">
+                    <input type="email" class="form-input" placeholder="Email address" required>
+                  </div>
+                  <div class="col-12">
+                    <input type="text" class="form-input" placeholder="Subject">
+                  </div>
+                  <div class="col-12">
+                    <textarea class="form-input" rows="4" placeholder="Your message..." required></textarea>
+                  </div>
+                  <div class="col-12">
+                    <button type="submit" class="btn-neon-filled w-100 border-0 magnet">
+                      <i class="fas fa-paper-plane me-2"></i>Send Message
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+      <div class="container">
+        <div class="row align-items-center g-3">
+          <div class="col-md-6 text-center text-md-start">
+            <div class="d-flex align-items-center gap-2 justify-content-center justify-content-md-start">
+              <i class="fas fa-shield-halved" style="color: var(--neon);"></i>
+              <span class="mono" style="font-size: 0.85rem; color: var(--text-muted);">
+                © 2025 Abhilash · Built with <i class="fas fa-heart" style="color: var(--neon);"></i> and caffeine
+              </span>
+            </div>
+          </div>
+          <div class="col-md-6 text-center text-md-end">
+            <a href="#home">Home</a>
+            <a href="#about">About</a>
+            <a href="#skills">Skills</a>
+            <a href="#contact">Contact</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // ============================================================
+    // HERO TITLE — Letter-by-letter scramble reveal
+    // ============================================================
+    (function () {
+      const heroTitle = document.getElementById('heroTitle');
+      if (!heroTitle) return;
+
+      const text = "Hi, I'm Abhilash";
+      let html = '';
+      let letterIndex = 0;
+
+      for (let i = 0; i < text.length; i++) {
+        const ch = text[i];
+        if (ch === ' ') {
+          html += ' ';
+        } else {
+          const delay = letterIndex * 0.06;
+          const isAccent = i >= text.indexOf('Abhilash');
+          html += `<span class="letter${isAccent ? ' accent' : ''}" style="animation-delay: ${delay + 0.3}s">${ch}</span>`;
+          letterIndex++;
+        }
+      }
+      heroTitle.innerHTML = html;
+    })();
+
+    // ============================================================
+    // TYPING TERMINAL EFFECT
+    // ============================================================
+    const typingTexts = [
+      'Initializing security protocols...',
+      'Loading threat intelligence...',
+      'Ready to defend the network.',
+      'root@abhilash:~# access granted_'
+    ];
+    let textIndex = 0, charIndex = 0, isDeleting = false;
+    const typingElement = document.getElementById('typingText');
+
+    function typeEffect() {
+      const currentText = typingTexts[textIndex];
+      if (isDeleting) {
+        typingElement.textContent = currentText.substring(0, charIndex - 1);
+        charIndex--;
+      } else {
+        typingElement.textContent = currentText.substring(0, charIndex + 1);
+        charIndex++;
+      }
+      let typeSpeed = isDeleting ? 30 : 60;
+      if (!isDeleting && charIndex === currentText.length) {
+        typeSpeed = 2200; isDeleting = true;
+      } else if (isDeleting && charIndex === 0) {
+        isDeleting = false;
+        textIndex = (textIndex + 1) % typingTexts.length;
+        typeSpeed = 400;
+      }
+      setTimeout(typeEffect, typeSpeed);
+    }
+    if (typingElement) typeEffect();
+
+    // ============================================================
+    // CURSOR GLOW TRAIL
+    // ============================================================
+    const cursorGlow = document.getElementById('cursorGlow');
+    let mouseX = 0, mouseY = 0, glowX = 0, glowY = 0;
+    document.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
+    function animateGlow() {
+      glowX += (mouseX - glowX) * 0.12;
+      glowY += (mouseY - glowY) * 0.12;
+      if (cursorGlow) {
+        cursorGlow.style.left = glowX + 'px';
+        cursorGlow.style.top = glowY + 'px';
+      }
+      requestAnimationFrame(animateGlow);
+    }
+    animateGlow();
+
+    // ============================================================
+    // NAVBAR SCROLL
+    // ============================================================
+    const nav = document.getElementById('mainNav');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 40) nav.classList.add('scrolled');
+      else nav.classList.remove('scrolled');
+    });
+
+    // ============================================================
+    // ROLLING STAT COUNTERS
+    // ============================================================
+    const counters = document.querySelectorAll('.stat-block .num');
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          const target = parseInt(el.getAttribute('data-count'));
+          let current = 0;
+          const duration = 1500;
+          const startTime = performance.now();
+          const animate = (now) => {
+            const progress = Math.min((now - startTime) / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            current = target * eased;
+            el.textContent = Math.floor(current) + '+';
+            if (progress < 1) requestAnimationFrame(animate);
+            else el.textContent = target + '+';
+          };
+          requestAnimationFrame(animate);
+          counterObserver.unobserve(el);
+        }
+      });
+    }, { threshold: 0.5 });
+    counters.forEach(c => counterObserver.observe(c));
+
+    // ============================================================
+    // PROGRESS BARS
+    // ============================================================
+    const progressBars = document.querySelectorAll('.skill-progress-bar');
+    const progressObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const bar = entry.target;
+          const width = bar.getAttribute('data-width');
+          setTimeout(() => { bar.style.width = width; }, 250);
+          progressObserver.unobserve(bar);
+        }
+      });
+    }, { threshold: 0.3 });
+    progressBars.forEach(b => progressObserver.observe(b));
+
+    // ============================================================
+    // BLUR-TO-FOCUS REVEAL
+    // ============================================================
+    const revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-right');
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const delay = entry.target.getAttribute('data-delay') || 0;
+          setTimeout(() => { entry.target.classList.add('visible'); }, delay);
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+    revealEls.forEach(el => revealObserver.observe(el));
+
+    // ============================================================
+    // TYPEWRITER SECTION TITLES
+    // ============================================================
+    const typewriters = document.querySelectorAll('[data-typewriter]');
+    const typewriterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animate');
+          typewriterObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.5 });
+    typewriters.forEach(t => typewriterObserver.observe(t));
+
+    // ============================================================
+    // WAVE STAGGER SKILL CHIPS
+    // ============================================================
+    document.querySelectorAll('[data-wave]').forEach(container => {
+      const chips = container.querySelectorAll('.skill-chip');
+      chips.forEach((chip, i) => {
+        chip.style.opacity = '0';
+        chip.style.transform = 'translateY(20px) scale(0.8)';
+        chip.style.transition = `all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) ${i * 0.05}s`;
+      });
+      const waveObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            chips.forEach(chip => {
+              chip.style.opacity = '1';
+              chip.style.transform = 'translateY(0) scale(1)';
+            });
+            waveObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.3 });
+      waveObserver.observe(container);
+    });
+
+    // ============================================================
+    // MAGNETIC BUTTONS
+    // ============================================================
+    document.querySelectorAll('.magnet').forEach(btn => {
+      btn.addEventListener('mousemove', (e) => {
+        const rect = btn.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        btn.style.transform = `translate(${x * 0.3}px, ${y * 0.4}px) scale(1.05)`;
+      });
+      btn.addEventListener('mouseleave', () => {
+        btn.style.transform = '';
+      });
+
+      // Ripple effect on click
+      btn.addEventListener('click', (e) => {
+        const rect = btn.getBoundingClientRect();
+        const ripple = document.createElement('span');
+        ripple.className = 'ripple';
+        const size = Math.max(rect.width, rect.height);
+        ripple.style.width = ripple.style.height = size + 'px';
+        ripple.style.left = (e.clientX - rect.left - size / 2) + 'px';
+        ripple.style.top = (e.clientY - rect.top - size / 2) + 'px';
+        btn.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 700);
+      });
+    });
+
+    // ============================================================
+    // MARQUEE RIBBON — build items
+    // ============================================================
+    const marqueeTrack = document.getElementById('marqueeTrack');
+    if (marqueeTrack) {
+      const items = [
+        { icon: 'fa-shield-halved', text: 'Threat Detection' },
+        { icon: 'fa-bug', text: 'Incident Response' },
+        { icon: 'fa-lock', text: 'Zero Trust' },
+        { icon: 'fa-network-wired', text: 'Network Security' },
+        { icon: 'fa-cloud', text: 'Cloud Security' },
+        { icon: 'fa-user-secret', text: 'Threat Intelligence' },
+        { icon: 'fa-terminal', text: 'SIEM' },
+        { icon: 'fa-key', text: 'Encryption' },
+        { icon: 'fa-radar', text: 'Vulnerability Scanning' },
+        { icon: 'fa-file-shield', text: 'Compliance' }
+      ];
+
+      let html = '';
+      // Duplicate for seamless loop
+      for (let dup = 0; dup < 2; dup++) {
+        items.forEach(item => {
+          html += `<div class="marquee-item"><i class="fas ${item.icon}"></i> ${item.text}</div>`;
+        });
+      }
+      marqueeTrack.innerHTML = html;
+    }
+
+    // ============================================================
+    // SMOOTH SCROLL
+    // ============================================================
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        if (href !== '#') {
+          e.preventDefault();
+          const target = document.querySelector(href);
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            const navCollapse = document.getElementById('navContent');
+            if (navCollapse && navCollapse.classList.contains('show')) {
+              new bootstrap.Collapse(navCollapse).hide();
+            }
+          }
+        }
+      });
+    });
+
+    // ============================================================
+    // HEXAGON PROFILE PARALLAX
+    // ============================================================
+    const hex = document.querySelector('.hex-container');
+    if (hex) {
+      document.addEventListener('mousemove', (e) => {
+        const x = (window.innerWidth / 2 - e.clientX) / 50;
+        const y = (window.innerHeight / 2 - e.clientY) / 50;
+        hex.style.transform = `translate(${x}px, ${y}px) scale(1.02)`;
+      });
+    }
+  </script>
+</body>
+</html>
